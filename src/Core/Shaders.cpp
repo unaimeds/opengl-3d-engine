@@ -6,10 +6,13 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <stdexcept>
+#include <string_view>
 
 #include "../Debug/Log.hpp"
 
-Shaders::Shaders(std::string_view vertexPath, std::string_view fragmentPath) : program(glCreateProgram()), binded(false) {
+Shaders::Shaders(std::string_view vertexPath, std::string_view fragmentPath) :
+    program(glCreateProgram()), binded(false)
+{
 	const auto vertex = CreateShader(vertexPath, GL_VERTEX_SHADER);
 	const auto fragment = CreateShader(fragmentPath, GL_FRAGMENT_SHADER);
 
@@ -118,11 +121,12 @@ std::uint32_t Shaders::CreateShader(std::string_view path, std::uint32_t type) c
 	if (compiled == false) {
 		int maxLength = 0;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
-		maxLength -= 1; // get rid of last NULL character (we are using spdlog for logging which add NULL character at the end of the line)
+		// get rid of last NULL character. We are using spdlog which adds NULL character at the end of the line.
+		maxLength -= 1;
 		std::vector<char> log(maxLength);
 		glGetShaderInfoLog(shader, maxLength, &maxLength, &log[0]);
 		glDeleteShader(shader);
-		LOG_ERROR("Failed to compile '{}' shader:\n{}", path, log);
+		LOG_ERROR("Failed to compile '{}' shader:\n{}", path, log.data());
 		std::exit(EXIT_FAILURE);
 	}
 

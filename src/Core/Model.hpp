@@ -21,11 +21,11 @@ public:
 	RawModel(const std::vector<Vertex>& vertices, const std::vector<std::uint32_t>& indices);
 	~RawModel();
 
-	void Draw() const;
-	void BindVAO(bool state) const;
-
 	RawModel(const RawModel&) = delete;
 	RawModel& operator=(const RawModel&) = delete;
+
+	void Draw() const;
+	void BindVAO(bool state) const;
 private:
 	std::uint32_t vao, vbo, ibo;
 	std::uint32_t indexCount;

@@ -5,12 +5,12 @@ public:
 	Texture(std::string_view path, std::uint16_t slot);
 	~Texture();
 
+	Texture(const Texture&) = delete;
+	Texture& operator=(const Texture&) = delete;
+
 	const std::string& GetPath() const { return path; }
 	std::uint16_t GetSlot() const { return slot; }
 	bool IsTransparent() const { return transparent; };
-
-	Texture(const Texture&) = delete;
-	Texture& operator=(const Texture&) = delete;
 private:
 	const std::string path;
 	std::uint32_t id;

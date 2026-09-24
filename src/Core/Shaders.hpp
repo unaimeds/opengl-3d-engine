@@ -9,6 +9,9 @@ public:
 	Shaders(std::string_view vertexPath, std::string_view fragmentPath);
 	~Shaders();
 
+	Shaders(const Shaders&) = delete;
+	Shaders& operator=(const Shaders&) = delete;
+
 	void Bind(bool state);
 
 	int GetAttribLocation(std::string_view name) const;
@@ -22,9 +25,6 @@ public:
 	void SetMat4(std::string_view name, const glm::mat4& value) const;
 
 	std::uint32_t GetProgram() const { return program; }
-
-	Shaders(const Shaders&) = delete;
-	Shaders& operator=(const Shaders&) = delete;
 private:
 	struct UniformInfo {
 		int location;

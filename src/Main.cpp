@@ -11,7 +11,7 @@ int main() {
 	auto cwd = std::filesystem::current_path();
 	LOG_INFO("Current working directory: {}", cwd.string());
 
-	auto window = std::make_unique<Window>("3d game es", glm::vec2(1280, 720));
+	auto window = std::make_unique<Window>("OpenGL 3D Engine", glm::vec2(1280, 720));
 	Input::Init(window->GetNative());
 
 	auto cubeShaders = std::make_shared<Shaders>("assets/shaders/cube.vs", "assets/shaders/cube.fs");

@@ -1,6 +1,7 @@
 #include "Window.hpp"
 
 #include <GLFW/glfw3.h>
+#include <cstdlib>
 #include <glad/glad.h>
 
 #include "../Debug/Log.hpp"
@@ -15,6 +16,7 @@ void DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsiz
 		case GL_DEBUG_SOURCE_APPLICATION: return "APPLICATION";
 		case GL_DEBUG_SOURCE_OTHER: return "OTHER";
 		}
+		return "UNKNOWN";
 	}();
 
 	auto const type_str = [type]() {
@@ -27,6 +29,7 @@ void DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsiz
 		case GL_DEBUG_TYPE_MARKER: return "MARKER";
 		case GL_DEBUG_TYPE_OTHER: return "OTHER";
 		}
+		return "UNKNOWN";
 	}();
 
 	auto const severity_str = [severity]() {
@@ -36,6 +39,7 @@ void DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsiz
 		case GL_DEBUG_SEVERITY_MEDIUM: return "MEDIUM";
 		case GL_DEBUG_SEVERITY_HIGH: return "HIGH";
 		}
+		return "UNKNOWN";
 	}();
 
 	LOG_WARN("GL: {} type: {} severity: {} message: {}", src_str, type_str, severity_str, message);
@@ -64,7 +68,11 @@ Window::Window(std::string_view title, const glm::uvec2& size) : size(size) {
 	glfwSwapInterval(1);
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // lock cursor
 
-	gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+	// gladLoadGL(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+	if (const int version = gladLoadGL(glfwGetProcAddress); version == 0) {
+        LOG_ERROR("Failed to initialize OpenGL context");
+        std::exit(EXIT_FAILURE);
+	}
 
 	glViewport(0, 0, size.x, size.y);
 	glEnable(GL_DEPTH_TEST);
