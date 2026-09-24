@@ -17,11 +17,13 @@ struct GLFWwindow;
 
 namespace Input {
 	using CursorPanCallback = std::function<void(glm::vec2)>;
+	using CallbackId = std::uint64_t;
 
 	void Init(GLFWwindow* native);
 	void Update();
 
-	void AddCursorPanCallback(const CursorPanCallback& callback);
+	CallbackId AddCursorPanCallback(CursorPanCallback callback);
+	void RemoveCursorPanCallback(CallbackId id);
 
 	bool IsKeyHeld(Key key);
 	float GetDeltaTime();

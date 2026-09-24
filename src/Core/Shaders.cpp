@@ -1,9 +1,11 @@
 #include "Shaders.hpp"
 
+#include <format>
 #include <fstream>
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <stdexcept>
 
 #include "../Debug/Log.hpp"
 
@@ -132,6 +134,5 @@ const Shaders::UniformInfo& Shaders::GetUniformInfo(std::string_view name) const
 	if (uniforms.contains(name.data()))
 		return uniforms.at(name.data());
 
-	LOG_ERROR("Uniform '{}' not found", name);
-	return UniformInfo{};
+	throw std::runtime_error(std::format("Uniform '{}' not found", name));
 }

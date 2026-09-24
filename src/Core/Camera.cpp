@@ -8,11 +8,16 @@ constexpr float CAMERA_SPEED = 5.0f, FAST_CAMERA_SPEED = 30.0f;
 constexpr glm::vec3 UP_VECTOR = { 0, 1, 0 };
 
 Camera::Camera() : front(0, 0, -1), right(1, 0, 0), position(0), pitch(0), yaw(-90) {
-	Input::AddCursorPanCallback(std::bind(&Camera::CursorPanCallback, this, std::placeholders::_1));
+	cursorPanCallbackId = Input::AddCursorPanCallback([this](glm::vec2 position) { CursorPanCallback(position); });
+}
+
+Camera::~Camera() {
+    Input::RemoveCursorPanCallback(cursorPanCallbackId);
 }
 
 void Camera::Update() {
-	auto velocity = (Input::IsKeyHeld(Key::Shift) ? FAST_CAMERA_SPEED : CAMERA_SPEED) * Input::GetDeltaTime();
+	const float velocity = (Input::IsKeyHeld(Key::Shift) ? FAST_CAMERA_SPEED : CAMERA_SPEED) * Input::GetDeltaTime();
+
 	if (Input::IsKeyHeld(Key::W))
 		position += front * velocity;
 	if (Input::IsKeyHeld(Key::S))
@@ -26,9 +31,8 @@ void Camera::Update() {
 }
 
 void Camera::CursorPanCallback(const glm::vec2& pos) {
-	static bool cursorInit = false;
-	if (!cursorInit) {
-		cursorInit = true;
+	if (!cursorInitialized) {
+		cursorInitialized = true;
 		lastPosition = pos;
 	}
 
@@ -49,9 +53,9 @@ void Camera::CursorPanCallback(const glm::vec2& pos) {
 		pitch = -89.0f;
 
 	glm::vec3 direction = {
-			cos(glm::radians(yaw)) * cos(glm::radians(pitch)),
-			sin(glm::radians(pitch)),
-			sin(glm::radians(yaw)) * cos(glm::radians(pitch))
+		cos(glm::radians(yaw)) * cos(glm::radians(pitch)),
+		sin(glm::radians(pitch)),
+		sin(glm::radians(yaw)) * cos(glm::radians(pitch))
 	};
 	front = glm::normalize(direction);
 	right = glm::normalize(glm::cross(front, UP_VECTOR));

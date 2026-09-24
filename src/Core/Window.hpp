@@ -14,6 +14,9 @@ public:
 
 	const glm::uvec2& GetSize() const { return size; }
 	GLFWwindow* GetNative() const { return _window; }
+
+	Window(const Window&) = delete;
+	Window& operator=(const Window&) = delete;
 private:
 	GLFWwindow* _window;
 	glm::uvec2 size;

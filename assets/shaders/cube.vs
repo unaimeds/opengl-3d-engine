@@ -1,8 +1,8 @@
 #version 460 core
 
-in vec3 position;
-in vec2 texCoords;
-in int texIndex;
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec2 texCoords;
+layout(location = 2) in int texIndex;
 
 out vec2 v_texCoords;
 flat out int v_texIndex;

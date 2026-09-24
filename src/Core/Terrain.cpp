@@ -1,17 +1,26 @@
 #include "Terrain.hpp"
 
-#include "../Debug/Log.hpp"
-
 constexpr std::uint32_t VertexCount = 128;
 constexpr std::uint32_t Size = 800;
 
 Terrain::Terrain(const glm::uvec2& grid, const std::shared_ptr<Texture>& texture) {
+    const float xOffset = static_cast<float>(grid.x) * Size;
+    const float zOffset = static_cast<float>(grid.y) * Size;
+
 	std::vector<Vertex> vertices;
 	vertices.reserve(VertexCount * VertexCount);
-	for (auto i = 0u; i < VertexCount; i++)
-		for (auto j = 0u; j < VertexCount; j++) {
-			const glm::vec3 position = { (float)j / ((float)VertexCount - 1) * Size, -5.0f, (float)i / ((float)VertexCount - 1) * Size };
-			const glm::vec2 texCoords = { (float)j / ((float)VertexCount - 1), (float)i / ((float)VertexCount - 1) };
+
+	for (std::uint32_t i = 0; i < VertexCount; i++)
+		for (std::uint32_t j = 0; j < VertexCount; j++) {
+			const glm::vec3 position = {
+			    xOffset + static_cast<float>(j) / (static_cast<float>(VertexCount) - 1.0f) * Size,
+				-5.0f,
+				zOffset + static_cast<float>(i) / (static_cast<float>(VertexCount) - 1.0f) * Size
+			};
+			const glm::vec2 texCoords = {
+			    static_cast<float>(j) / (static_cast<float>(VertexCount) - 1.0f),
+				static_cast<float>(i) / (static_cast<float>(VertexCount) - 1.0f)
+			};
 
 			vertices.emplace_back(position, texCoords, texture->GetSlot());
 		}

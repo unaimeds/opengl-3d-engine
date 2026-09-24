@@ -50,6 +50,7 @@ target_include_directories(opengl_3d_engine PRIVATE deps/glm deps/stb)
 
 target_link_libraries(opengl_3d_engine PRIVATE glfw glad spdlog::spdlog assimp)
 
+
 # Copy assets to output directory after compiling the project
 add_custom_target(
     copy_assets COMMAND ${CMAKE_COMMAND} -E copy_directory

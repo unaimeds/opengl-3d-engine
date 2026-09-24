@@ -9,13 +9,15 @@
 RawModel::RawModel(const std::vector<Vertex>& vertices, const std::vector<std::uint32_t>& indices) {
 	LOG_INFO("Create buffers");
 
+	indexCount = static_cast<std::uint32_t>(indices.size());
+
 	// vbo, ibo
 	glCreateBuffers(1, &vbo);
 	glNamedBufferStorage(vbo, vertices.size() * sizeof(Vertex), vertices.data(), GL_DYNAMIC_STORAGE_BIT);
 
-	indicesSize = indices.size() * sizeof(std::uint32_t);
+	const size_t indexBufferSize = indices.size() * sizeof(std::uint32_t);
 	glCreateBuffers(1, &ibo);
-	glNamedBufferStorage(ibo, indicesSize, indices.data(), GL_DYNAMIC_STORAGE_BIT);
+	glNamedBufferStorage(ibo, indexBufferSize, indices.data(), GL_DYNAMIC_STORAGE_BIT);
 
 	// vao
 	glCreateVertexArrays(1, &vao);
@@ -47,14 +49,16 @@ RawModel::~RawModel() {
 }
 
 void RawModel::Draw() const {
-	glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 }
 
 void RawModel::BindVAO(bool state) const {
 	glBindVertexArray(state ? vao : 0);
 }
 
-Model::Model(std::string_view path, const std::shared_ptr<Texture>& texture) : directory(path.substr(0, path.find_last_of('/'))), diffuseTexture(texture) {
+Model::Model(std::string_view path, const std::shared_ptr<Texture>& texture) :
+    directory(path.substr(0, path.find_last_of('/'))), diffuseTexture(texture)
+{
 	Assimp::Importer importer;
 	auto scene = importer.ReadFile(path.data(), aiProcess_Triangulate | aiProcess_FlipUVs);
 
@@ -107,7 +111,7 @@ void Model::CreateMesh(const aiMesh* mesh, const aiScene* scene, std::uint16_t t
 			indices.emplace_back(face.mIndices[j]);
 	}
 
-	if (mesh->mMaterialIndex > 0) { // tutaj bylo `>=` jak cos
+	if (mesh->mMaterialIndex > 0) {
 		const auto material = scene->mMaterials[mesh->mMaterialIndex];
 		diffuseTexture = FetchTexture(material, aiTextureType_DIFFUSE);
 		specularTexture = FetchTexture(material, aiTextureType_SPECULAR);

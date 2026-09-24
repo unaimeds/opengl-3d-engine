@@ -3,12 +3,14 @@
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Camera.hpp"
-#include "../Debug/Log.hpp"
-
-Renderer::Renderer(const glm::uvec2& windowSize, const std::shared_ptr<Shaders>& shaders) : shaders(shaders), projectionMatrix(glm::perspective(FOV, static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y), NEAR_PLANE, FAR_PLANE)) {
-
-}
+Renderer::Renderer(const glm::uvec2& windowSize, const std::shared_ptr<Shaders>& shaders) :
+    shaders(shaders), projectionMatrix(
+        glm::perspective(
+            FOV, static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y),
+            NEAR_PLANE, FAR_PLANE
+        )
+    )
+{}
 
 void Renderer::Add(const Entity& entity) {
 	auto& model = entity.GetModel();

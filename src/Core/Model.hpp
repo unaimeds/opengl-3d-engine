@@ -23,8 +23,12 @@ public:
 
 	void Draw() const;
 	void BindVAO(bool state) const;
+
+	RawModel(const RawModel&) = delete;
+	RawModel& operator=(const RawModel&) = delete;
 private:
-	std::uint32_t vao, vbo, ibo, indicesSize;
+	std::uint32_t vao, vbo, ibo;
+	std::uint32_t indexCount;
 };
 
 class Model {
