@@ -5,7 +5,7 @@
 
 #include "../Debug/Log.hpp"
 
-void __stdcall DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
+void DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
 	auto const src_str = [source]() {
 		switch (source) {
 		case GL_DEBUG_SOURCE_API: return "API";
